@@ -14,6 +14,7 @@
         <h2>Spacing</h2>
         <p>Positive and negative spacing scales with descriptive names.</p>
       </header>
+      <div id="toolbar" class="toolbar"></div>
       <div id="page-body">
         <div class="loading">Loading tokens…</div>
       </div>
@@ -24,6 +25,29 @@
     import { initPage, el, sectionLabel } from './js/render.js';
     import { flattenTokens } from './js/tokens.js';
     import { spacingCssVar } from './js/css-names.js';
+
+    let currentFilter = 'positive';
+    let cachedData = null;
+
+    function buildToolbar() {
+      const toolbar = document.getElementById('toolbar');
+      toolbar.innerHTML = '';
+
+      const toggle = el('div', { className: 'view-toggle' });
+      for (const [key, label] of [['positive', 'Positive'], ['negative', 'Negative']]) {
+        const btn = el('button', {
+          text: label,
+          className: key === currentFilter ? 'active' : '',
+        });
+        btn.addEventListener('click', () => {
+          currentFilter = key;
+          buildToolbar();
+          renderPage();
+        });
+        toggle.appendChild(btn);
+      }
+      toolbar.appendChild(toggle);
+    }
 
     function renderSpacingGroup(container, json, label) {
       container.appendChild(sectionLabel(label));
@@ -45,11 +69,11 @@
         const row = el('div', { className: 'spacing-row' });
 
         const nameCol = el('div');
-        nameCol.appendChild(el('div', { className: 'spacing-name', text: token.name }));
-        if (token.description) {
-          nameCol.appendChild(el('div', { className: 'spacing-desc', text: token.description }));
-        }
         const cssVar = spacingCssVar(token.name);
+        nameCol.appendChild(el('div', { className: 'spacing-name', text: token.name }));
+        // if (token.description) {
+        //   nameCol.appendChild(el('div', { className: 'spacing-desc', text: token.description }));
+        // }
         if (cssVar) {
           nameCol.appendChild(el('div', { className: 'css-var', text: cssVar }));
         }
@@ -73,12 +97,23 @@
       container.appendChild(wrap);
     }
 
-    initPage((data) => {
+    function renderPage() {
+      if (!cachedData) return;
       const body = document.getElementById('page-body');
       body.innerHTML = '';
 
-      renderSpacingGroup(body, data['Spacing.Positive'], 'Positive spacing');
-      renderSpacingGroup(body, data['Spacing.Negative'], 'Negative spacing');
+      if (currentFilter === 'positive') {
+        renderSpacingGroup(body, cachedData['Spacing.Positive'], 'Positive spacing');
+      } else {
+        renderSpacingGroup(body, cachedData['Spacing.Negative'], 'Negative spacing');
+      }
+    }
+
+    buildToolbar();
+    initPage((data) => {
+      cachedData = data;
+      buildToolbar();
+      renderPage();
     });
   </script>
 </body>
