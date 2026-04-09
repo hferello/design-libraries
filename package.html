@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NPM Package — Design Libraries by Hal</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .pkg-intro {
+      max-width: 640px;
+      margin-bottom: 40px;
+    }
+
+    .pkg-intro p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+
+    .pkg-name {
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      color: var(--accent);
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    .code-block {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: auto;
+      margin-bottom: 16px;
+      white-space: pre;
+    }
+
+    .code-block .comment {
+      color: var(--text-faint);
+    }
+
+    .code-block .string {
+      color: #a5d6a7;
+    }
+
+    [data-theme="light"] .code-block .string {
+      color: #2e7d32;
+    }
+
+    .output-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 24px;
+    }
+
+    .output-table th {
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-faint);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .output-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .output-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .output-table .mono {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+    }
+
+    .output-table .label {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .pkg-links {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .pkg-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--accent);
+      transition: all var(--transition);
+    }
+
+    .pkg-link:hover {
+      border-color: var(--accent);
+      color: var(--accent-hover);
+    }
+
+    .pkg-link svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .pipeline-diagram {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      overflow-x: auto;
+      white-space: pre;
+      margin-bottom: 24px;
+    }
+
+    .pipeline-diagram .hl {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" aria-label="Sidebar"></aside>
+    <main class="main" id="content">
+      <header class="page-header">
+        <h2>NPM Package</h2>
+        <p>CSS custom properties and Tailwind v4 theme from Figma design tokens.</p>
+      </header>
+
+      <span class="pkg-name">@hferello/design-libraries-npm</span>
+
+      <div class="pkg-links">
+        <a href="https://github.com/hferello/design-libraries-npm" target="_blank" rel="noopener" class="pkg-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path></svg>
+          View on GitHub
+        </a>
+      </div>
+
+      <div class="pkg-intro">
+        <p>A Style Dictionary v4 pipeline that transforms Figma-exported DTCG token JSON into alias-preserving CSS custom properties and a Tailwind v4 <code>@theme</code> configuration. Each library produces three CSS files — use the one that fits your stack.</p>
+      </div>
+
+      <div class="section-label">Install</div>
+
+      <div class="code-block"><span class="comment"># GitHub Packages registry</span>
+npm install @hferello/design-libraries-npm --registry=https://npm.pkg.github.com</div>
+
+      <div class="section-label">Usage</div>
+
+      <div class="code-block"><span class="comment">/* Tailwind v4 project */</span>
+@import <span class="string">"@hferello/design-libraries-npm/golden-ratio/tailwind-theme.css"</span>;
+
+<span class="comment">/* Non-Tailwind project */</span>
+@import <span class="string">"@hferello/design-libraries-npm/golden-ratio/tokens.css"</span>;</div>
+
+      <div class="code-block"><span class="comment">&lt;!-- Tailwind utility examples --&gt;</span>
+&lt;div class=<span class="string">"p-tight gap-section rounded-soft blur-void"</span>&gt;
+  &lt;p class=<span class="string">"text-base text-fg-neutral-aa bg-neutral-faint"</span>&gt;Hello&lt;/p&gt;
+&lt;/div&gt;</div>
+
+      <div class="section-label">Available imports</div>
+
+      <table class="output-table">
+        <thead>
+          <tr>
+            <th>Library</th>
+            <th>Import path</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label">Golden Ratio</td>
+            <td class="mono">golden-ratio/tailwind-theme.css</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td class="mono">golden-ratio/tokens.css</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td class="mono">golden-ratio/primitives.css</td>
+          </tr>
+          <tr>
+            <td class="label">Typographic Ratio</td>
+            <td class="mono">typographic-ratio/tailwind-theme.css</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td class="mono">typographic-ratio/tokens.css</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td class="mono">typographic-ratio/primitives.css</td>
+          </tr>
+          <tr>
+            <td class="label">Base 10</td>
+            <td class="mono">base-10-ratio/tailwind-theme.css</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td class="mono">base-10-ratio/tokens.css</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td class="mono">base-10-ratio/primitives.css</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-label">Output files</div>
+
+      <table class="output-table">
+        <thead>
+          <tr>
+            <th>File</th>
+            <th>Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label mono">primitives.css</td>
+            <td>Raw palette values in <code>:root</code>. Number scale, all colour hues, transparent overlays.</td>
+          </tr>
+          <tr>
+            <td class="label mono">tokens.css</td>
+            <td>Semantic layer for non-Tailwind consumers. Imports primitives, defines <code>var(--primitive-*)</code> aliases, <code>.dark</code> overrides, and <code>@media</code> responsive breakpoints.</td>
+          </tr>
+          <tr>
+            <td class="label mono">tailwind-theme.css</td>
+            <td>Tailwind v4 entry point. Splits tokens into <code>@theme static</code> (utility classes) and <code>:root</code> (plain CSS variables).</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-label">Token namespaces (Tailwind utilities)</div>
+
+      <table class="output-table">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>CSS namespace</th>
+            <th>Examples</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label">Spacing (11)</td>
+            <td class="mono">--spacing-*</td>
+            <td class="mono">p-tight, gap-section, m-apart</td>
+          </tr>
+          <tr>
+            <td class="label">Grid spatial</td>
+            <td class="mono">--spacing-grid-*</td>
+            <td class="mono">gap-grid-gutter, p-grid-margin</td>
+          </tr>
+          <tr>
+            <td class="label">Font sizes (7)</td>
+            <td class="mono">--text-*</td>
+            <td class="mono">text-xs, text-base, text-2xl</td>
+          </tr>
+          <tr>
+            <td class="label">Border radius (6)</td>
+            <td class="mono">--radius-*</td>
+            <td class="mono">rounded-soft, rounded-pill</td>
+          </tr>
+          <tr>
+            <td class="label">Blur (4)</td>
+            <td class="mono">--blur-*</td>
+            <td class="mono">blur-soft, blur-void</td>
+          </tr>
+          <tr>
+            <td class="label">Colours</td>
+            <td class="mono">--color-*</td>
+            <td class="mono">bg-neutral-base, text-fg-neutral-aa</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-label">Plain CSS variables (non-utility)</div>
+
+      <table class="output-table">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Variable</th>
+            <th>Tailwind access</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label">Grid columns</td>
+            <td class="mono">--grid-columns</td>
+            <td class="mono">grid-cols-[var(--grid-columns)]</td>
+          </tr>
+          <tr>
+            <td class="label">Border weight (4)</td>
+            <td class="mono">--border-*</td>
+            <td class="mono">border-[length:var(--border-hairline)]</td>
+          </tr>
+          <tr>
+            <td class="label">Opacity (5)</td>
+            <td class="mono">--opacity-*</td>
+            <td class="mono">opacity-[var(--opacity-high)]</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-label">Pipeline</div>
+
+      <div class="pipeline-diagram"><span class="hl">Source</span> (10 DTCG JSON files per library)
+  │
+  ▼
+<span class="hl">Style Dictionary v4</span>
+  ├─ Parser         → namespace wrapping
+  ├─ Preprocessor   → flatten Figma colours to hex/rgba
+  ├─ Name transform → static mappings + namespace routing
+  ├─ Value transform→ px units, opacity normalisation
+  └─ Alias transform→ aliasData → var() references
+  │
+  ▼
+<span class="hl">Output</span> (3 CSS files per library)
+  ├─ primitives.css
+  ├─ tokens.css
+  └─ tailwind-theme.css</div>
+
+    </main>
+  </div>
+
+  <script type="module">
+    import { initPage } from './js/render.js';
+    initPage();
+  </script>
+</body>
+</html>

@@ -467,6 +467,13 @@ a:hover {
   color: var(--text-faint);
 }
 
+.css-var {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--accent);
+  opacity: 0.85;
+}
+
 .card-info .wcag-row {
   display: flex;
   gap: 4px;

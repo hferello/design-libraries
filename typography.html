@@ -22,6 +22,7 @@
 
   <script type="module">
     import { initPage, el, sectionLabel } from './js/render.js';
+    import { fontSizeCssVar, gridCssVar, gridVerticalCssVar } from './js/css-names.js';
 
     const SIZE_ORDER = ['XSmall', 'Small', 'Regular', 'Medium', 'Large', 'XLarge', 'XXLarge'];
 
@@ -74,7 +75,8 @@
         const sample = el('div', { className: 'type-sample' });
 
         const header = el('div', { className: 'type-sample-header' });
-        header.appendChild(el('span', { className: 'type-sample-label', text: name }));
+        const cssVar = fontSizeCssVar(name);
+        header.appendChild(el('span', { className: 'type-sample-label', text: cssVar ? `${name}  ${cssVar}` : name }));
         header.appendChild(el('span', {
           className: 'type-sample-values',
           html: `<span>D: ${dSizes[name] ?? '—'}px</span><span>T: ${tSizes[name] ?? '—'}px</span><span>M: ${mSizes[name] ?? '—'}px</span>`,
@@ -96,7 +98,7 @@
       const table = el('table', { className: 'breakpoint-table' });
       const thead = el('thead');
       const hRow = el('tr');
-      for (const h of ['Size', 'Mobile', 'Tablet', 'Desktop']) {
+      for (const h of ['Size', 'CSS Variable', 'Mobile', 'Tablet', 'Desktop']) {
         hRow.appendChild(el('th', { text: h }));
       }
       thead.appendChild(hRow);
@@ -106,6 +108,7 @@
       for (const name of SIZE_ORDER) {
         const row = el('tr');
         row.appendChild(el('td', { className: 'row-label', text: name }));
+        row.appendChild(el('td', { className: 'mono', text: fontSizeCssVar(name) || '—' }));
         row.appendChild(el('td', { text: mSizes[name] !== undefined ? `${mSizes[name]}px` : '—' }));
         row.appendChild(el('td', { text: tSizes[name] !== undefined ? `${tSizes[name]}px` : '—' }));
         row.appendChild(el('td', { text: dSizes[name] !== undefined ? `${dSizes[name]}px` : '—' }));
@@ -146,11 +149,20 @@
       const gTable = el('table', { className: 'breakpoint-table' });
       const gHead = el('thead');
       const ghRow = el('tr');
-      for (const h of ['Setting', 'Mobile', 'Tablet', 'Desktop']) {
+      for (const h of ['Setting', 'CSS Variable', 'Mobile', 'Tablet', 'Desktop']) {
         ghRow.appendChild(el('th', { text: h }));
       }
       gHead.appendChild(ghRow);
       gTable.appendChild(gHead);
+
+      const GRID_CSS_MAP = {
+        'columns': '--grid-columns',
+        'margin': '--spacing-grid-margin',
+        'gutter': '--spacing-grid-gutter',
+        'verticalTight': '--spacing-grid-vertical-tight',
+        'verticalDefault': '--spacing-grid-vertical-default',
+        'verticalLoose': '--spacing-grid-vertical-loose',
+      };
 
       const gBody = el('tbody');
       const gridRows = [
@@ -165,6 +177,7 @@
       for (const [label, key] of gridRows) {
         const row = el('tr');
         row.appendChild(el('td', { className: 'row-label', text: label }));
+        row.appendChild(el('td', { className: 'mono', text: GRID_CSS_MAP[key] || '—' }));
         row.appendChild(el('td', { text: mGrid[key] !== undefined ? `${mGrid[key]}px` : '—' }));
         row.appendChild(el('td', { text: tGrid[key] !== undefined ? `${tGrid[key]}px` : '—' }));
         row.appendChild(el('td', { text: dGrid[key] !== undefined ? `${dGrid[key]}px` : '—' }));

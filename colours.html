@@ -29,6 +29,7 @@
       groupPrimitiveColours, groupSemanticColours, getEffectsOpacityColours,
     } from './js/tokens.js';
     import { contrastInfo, textColourOnBg } from './js/wcag.js';
+    import { semanticColourCssVar, primitiveColourCssVar } from './js/css-names.js';
 
     let currentView = 'grid';
     let currentMode = 'light';
@@ -133,7 +134,7 @@
         body.appendChild(sectionLabel('Primitive palette'));
 
         if (currentView === 'strip') {
-          renderStrips(body, primitives);
+          renderStrips(body, primitives, true);
         } else if (currentView === 'list') {
           renderList(body, primitives, true);
         } else {
@@ -148,7 +149,7 @@
         body.appendChild(sectionLabel(`Semantic colours (${currentMode})`));
 
         if (currentView === 'strip') {
-          renderStrips(body, semantics);
+          renderStrips(body, semantics, false);
         } else if (currentView === 'list') {
           renderList(body, semantics, false);
         } else {
@@ -191,6 +192,13 @@
             info.appendChild(el('span', { className: 'token-alias', text: token.$description }));
           }
 
+          const cssVar = isPrimitive
+            ? primitiveColourCssVar(token.path)
+            : semanticColourCssVar(token.path);
+          if (cssVar) {
+            info.appendChild(el('span', { className: 'css-var', text: cssVar }));
+          }
+
           const ci = contrastInfo(hex);
           const wcagRow = el('div', { className: 'wcag-row' });
           wcagRow.appendChild(wcagBadge('W', ci.onWhite));
@@ -206,7 +214,7 @@
     }
 
     /* ---- Strip view ---- */
-    function renderStrips(container, groups) {
+    function renderStrips(container, groups, isPrimitive) {
       for (const [name, tokens] of Object.entries(groups)) {
         container.appendChild(el('h4', {
           text: name,
@@ -229,7 +237,10 @@
             text: hex,
             style: { color: fg, background: hex === '#FFFFFF' || hex === '#ffffff' ? 'rgba(0,0,0,0.08)' : 'transparent' },
           }));
-          cell.setAttribute('title', `${token.path.join(' / ')} — ${hex}`);
+          const stripCssVar = isPrimitive
+            ? primitiveColourCssVar(token.path)
+            : semanticColourCssVar(token.path);
+          cell.setAttribute('title', `${stripCssVar || token.path.join(' / ')} — ${hex}`);
           strip.appendChild(cell);
         }
 
@@ -248,7 +259,7 @@
         const table = el('table', { className: 'breakpoint-table' });
         const thead = el('thead');
         const headRow = el('tr');
-        for (const h of ['Swatch', 'Token', 'Hex', 'Alias', 'WCAG vs White', 'WCAG vs Black']) {
+        for (const h of ['Swatch', 'CSS Variable', 'Token', 'Hex', 'WCAG vs White', 'WCAG vs Black']) {
           headRow.appendChild(el('th', { text: h }));
         }
         thead.appendChild(headRow);
@@ -267,9 +278,12 @@
           }));
           row.appendChild(swatchTd);
 
+          const listCssVar = isPrimitive
+            ? primitiveColourCssVar(token.path)
+            : semanticColourCssVar(token.path);
+          row.appendChild(el('td', { className: 'mono', text: listCssVar || '—' }));
           row.appendChild(el('td', { className: 'row-label', text: token.path.join(' / ') }));
           row.appendChild(el('td', { text: hex }));
-          row.appendChild(el('td', { text: aliasName(token) || '—' }));
 
           const ci = contrastInfo(hex);
           const wTd = el('td');

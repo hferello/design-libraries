@@ -22,6 +22,7 @@
 
   <script type="module">
     import { initPage, el, sectionLabel } from './js/render.js';
+    import { radiusCssVar, borderWeightCssVar, blurCssVar, opacityCssVar } from './js/css-names.js';
 
     function extractTokens(obj) {
       const result = [];
@@ -62,6 +63,8 @@
             className: 'radius-value',
             text: tok.value >= 9999 ? '9999px (circle)' : `${tok.value}px`,
           }));
+          const rVar = radiusCssVar(tok.name);
+          if (rVar) card.appendChild(el('div', { className: 'css-var', text: rVar }));
 
           grid.appendChild(card);
         }
@@ -82,6 +85,8 @@
           const info = el('div', { className: 'weight-info' });
           info.appendChild(el('div', { className: 'weight-name', text: tok.name }));
           info.appendChild(el('div', { className: 'weight-val', text: `${tok.value}px` }));
+          const wVar = borderWeightCssVar(tok.name);
+          if (wVar) info.appendChild(el('div', { className: 'css-var', text: wVar }));
           row.appendChild(info);
 
           row.appendChild(el('div', {
@@ -113,10 +118,12 @@
           }));
           card.appendChild(preview);
 
-          const info = el('div', { className: 'effect-info' });
-          info.appendChild(el('div', { className: 'effect-name', text: tok.name }));
-          info.appendChild(el('div', { className: 'effect-value', text: `${tok.value}px` }));
-          card.appendChild(info);
+          const bInfo = el('div', { className: 'effect-info' });
+          bInfo.appendChild(el('div', { className: 'effect-name', text: tok.name }));
+          bInfo.appendChild(el('div', { className: 'effect-value', text: `${tok.value}px` }));
+          const bVar = blurCssVar(tok.name);
+          if (bVar) bInfo.appendChild(el('div', { className: 'css-var', text: bVar }));
+          card.appendChild(bInfo);
 
           grid.appendChild(card);
         }
@@ -144,13 +151,15 @@
           }));
           card.appendChild(preview);
 
-          const info = el('div', { className: 'effect-info' });
-          info.appendChild(el('div', { className: 'effect-name', text: tok.name }));
-          info.appendChild(el('div', {
+          const oInfo = el('div', { className: 'effect-info' });
+          oInfo.appendChild(el('div', { className: 'effect-name', text: tok.name }));
+          oInfo.appendChild(el('div', {
             className: 'effect-value',
             text: tok.value > 100 ? `${tok.value} (clamped to 100%)` : `${tok.value}%`,
           }));
-          card.appendChild(info);
+          const oVar = opacityCssVar(tok.name);
+          if (oVar) oInfo.appendChild(el('div', { className: 'css-var', text: oVar }));
+          card.appendChild(oInfo);
 
           grid.appendChild(card);
         }

@@ -23,6 +23,7 @@
   <script type="module">
     import { initPage, el, sectionLabel } from './js/render.js';
     import { flattenTokens } from './js/tokens.js';
+    import { spacingCssVar } from './js/css-names.js';
 
     function renderSpacingGroup(container, json, label) {
       container.appendChild(sectionLabel(label));
@@ -47,6 +48,10 @@
         nameCol.appendChild(el('div', { className: 'spacing-name', text: token.name }));
         if (token.description) {
           nameCol.appendChild(el('div', { className: 'spacing-desc', text: token.description }));
+        }
+        const cssVar = spacingCssVar(token.name);
+        if (cssVar) {
+          nameCol.appendChild(el('div', { className: 'css-var', text: cssVar }));
         }
         row.appendChild(nameCol);
 
