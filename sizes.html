@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sizes — Design Token Reference</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" aria-label="Sidebar"></aside>
+    <main class="main" id="content">
+      <header class="page-header">
+        <h2>Sizes</h2>
+        <p>Border radius, border weight, blur levels, and opacity steps.</p>
+      </header>
+      <div id="page-body">
+        <div class="loading">Loading tokens…</div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initPage, el, sectionLabel } from './js/render.js';
+
+    function extractTokens(obj) {
+      const result = [];
+      for (const [key, val] of Object.entries(obj)) {
+        if (key.startsWith('$')) continue;
+        if (val && typeof val === 'object' && '$type' in val) {
+          result.push({ name: key, value: val.$value });
+        }
+      }
+      return result;
+    }
+
+    initPage((data) => {
+      const body = document.getElementById('page-body');
+      body.innerHTML = '';
+
+      const sizes = data['Sizes'];
+      const effects = data['Effects'];
+
+      /* --- Border Radius --- */
+      const radii = sizes?.Border?.Radius;
+      if (radii) {
+        body.appendChild(sectionLabel('Border radius'));
+
+        const tokens = extractTokens(radii);
+        const grid = el('div', { className: 'radius-grid' });
+
+        for (const tok of tokens) {
+          const card = el('div', { className: 'radius-card' });
+
+          const radius = tok.value >= 9999 ? '50%' : `${tok.value}px`;
+          card.appendChild(el('div', {
+            className: 'radius-preview',
+            style: { borderRadius: radius },
+          }));
+          card.appendChild(el('div', { className: 'radius-label', text: tok.name }));
+          card.appendChild(el('div', {
+            className: 'radius-value',
+            text: tok.value >= 9999 ? '9999px (circle)' : `${tok.value}px`,
+          }));
+
+          grid.appendChild(card);
+        }
+        body.appendChild(grid);
+      }
+
+      /* --- Border Weight --- */
+      const weights = sizes?.Border?.Weight;
+      if (weights) {
+        body.appendChild(sectionLabel('Border weight'));
+
+        const tokens = extractTokens(weights);
+        const wrap = el('div');
+
+        for (const tok of tokens) {
+          const row = el('div', { className: 'weight-row' });
+
+          const info = el('div', { className: 'weight-info' });
+          info.appendChild(el('div', { className: 'weight-name', text: tok.name }));
+          info.appendChild(el('div', { className: 'weight-val', text: `${tok.value}px` }));
+          row.appendChild(info);
+
+          row.appendChild(el('div', {
+            className: 'weight-line',
+            style: { height: `${tok.value}px` },
+          }));
+
+          wrap.appendChild(row);
+        }
+        body.appendChild(wrap);
+      }
+
+      /* --- Blur --- */
+      const blur = effects?.Blur;
+      if (blur) {
+        body.appendChild(sectionLabel('Blur levels'));
+
+        const tokens = extractTokens(blur);
+        const grid = el('div', { className: 'effects-grid' });
+
+        for (const tok of tokens) {
+          const card = el('div', { className: 'effect-card' });
+
+          const preview = el('div', { className: 'effect-preview' });
+          preview.appendChild(el('div', { className: 'blur-bg' }));
+          preview.appendChild(el('div', {
+            className: 'blur-overlay',
+            style: { '--blur-amount': `${tok.value}px` },
+          }));
+          card.appendChild(preview);
+
+          const info = el('div', { className: 'effect-info' });
+          info.appendChild(el('div', { className: 'effect-name', text: tok.name }));
+          info.appendChild(el('div', { className: 'effect-value', text: `${tok.value}px` }));
+          card.appendChild(info);
+
+          grid.appendChild(card);
+        }
+        body.appendChild(grid);
+      }
+
+      /* --- Opacity --- */
+      const opacity = effects?.Opacity;
+      if (opacity) {
+        body.appendChild(sectionLabel('Opacity levels'));
+
+        const tokens = extractTokens(opacity);
+        tokens.sort((a, b) => b.value - a.value);
+
+        const grid = el('div', { className: 'effects-grid' });
+
+        for (const tok of tokens) {
+          const card = el('div', { className: 'effect-card' });
+
+          const pct = Math.min(tok.value, 100);
+          const preview = el('div', { className: 'effect-preview' });
+          preview.appendChild(el('div', {
+            className: 'opacity-layer',
+            style: { opacity: pct / 100 },
+          }));
+          card.appendChild(preview);
+
+          const info = el('div', { className: 'effect-info' });
+          info.appendChild(el('div', { className: 'effect-name', text: tok.name }));
+          info.appendChild(el('div', {
+            className: 'effect-value',
+            text: tok.value > 100 ? `${tok.value} (clamped to 100%)` : `${tok.value}%`,
+          }));
+          card.appendChild(info);
+
+          grid.appendChild(card);
+        }
+        body.appendChild(grid);
+      }
+    });
+  </script>
+</body>
+</html>

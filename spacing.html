@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing — Design Token Reference</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" aria-label="Sidebar"></aside>
+    <main class="main" id="content">
+      <header class="page-header">
+        <h2>Spacing</h2>
+        <p>Positive and negative spacing scales with descriptive names.</p>
+      </header>
+      <div id="page-body">
+        <div class="loading">Loading tokens…</div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initPage, el, sectionLabel } from './js/render.js';
+    import { flattenTokens } from './js/tokens.js';
+
+    function renderSpacingGroup(container, json, label) {
+      container.appendChild(sectionLabel(label));
+
+      const tokens = [];
+      for (const [key, val] of Object.entries(json)) {
+        if (key.startsWith('$')) continue;
+        if (val && typeof val === 'object' && '$type' in val) {
+          tokens.push({ name: key, value: val.$value, description: val.$description || '' });
+        }
+      }
+
+      tokens.sort((a, b) => Math.abs(a.value) - Math.abs(b.value));
+
+      const maxVal = Math.max(...tokens.map((t) => Math.abs(t.value)), 1);
+
+      const wrap = el('div');
+      for (const token of tokens) {
+        const row = el('div', { className: 'spacing-row' });
+
+        const nameCol = el('div');
+        nameCol.appendChild(el('div', { className: 'spacing-name', text: token.name }));
+        if (token.description) {
+          nameCol.appendChild(el('div', { className: 'spacing-desc', text: token.description }));
+        }
+        row.appendChild(nameCol);
+
+        row.appendChild(el('div', {
+          className: 'spacing-value',
+          text: `${token.value}px`,
+        }));
+
+        const barWrap = el('div', { className: 'spacing-bar-wrap' });
+        const pct = (Math.abs(token.value) / maxVal) * 100;
+        barWrap.appendChild(el('div', {
+          className: 'spacing-bar',
+          style: { width: `${Math.max(pct, 0.5)}%` },
+        }));
+        row.appendChild(barWrap);
+
+        wrap.appendChild(row);
+      }
+      container.appendChild(wrap);
+    }
+
+    initPage((data) => {
+      const body = document.getElementById('page-body');
+      body.innerHTML = '';
+
+      renderSpacingGroup(body, data['Spacing.Positive'], 'Positive spacing');
+      renderSpacingGroup(body, data['Spacing.Negative'], 'Negative spacing');
+    });
+  </script>
+</body>
+</html>

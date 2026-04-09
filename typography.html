@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typography — Design Token Reference</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" aria-label="Sidebar"></aside>
+    <main class="main" id="content">
+      <header class="page-header">
+        <h2>Typography</h2>
+        <p>Font size scale at actual size with breakpoint comparison and grid settings.</p>
+      </header>
+      <div id="page-body">
+        <div class="loading">Loading tokens…</div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initPage, el, sectionLabel } from './js/render.js';
+
+    const SIZE_ORDER = ['XSmall', 'Small', 'Regular', 'Medium', 'Large', 'XLarge', 'XXLarge'];
+
+    function getFontSizes(responsiveJson) {
+      const sizes = responsiveJson?.Font?.Sizes;
+      if (!sizes) return {};
+      const result = {};
+      for (const [name, tok] of Object.entries(sizes)) {
+        if (name.startsWith('$')) continue;
+        result[name] = tok.$value;
+      }
+      return result;
+    }
+
+    function getGridSettings(responsiveJson) {
+      const grid = responsiveJson?.Grid;
+      if (!grid) return {};
+      const result = {
+        columns: grid.Horizontal?.$value,
+        margin: grid.Margin?.$value,
+        gutter: grid.Gutter?.$value,
+      };
+      if (grid.Vertical) {
+        result.verticalTight = grid.Vertical.Tight?.$value;
+        result.verticalDefault = grid.Vertical.Default?.$value;
+        result.verticalLoose = grid.Vertical.Loose?.$value;
+      }
+      return result;
+    }
+
+    initPage((data) => {
+      const body = document.getElementById('page-body');
+      body.innerHTML = '';
+
+      const desktop = data['Responsive.Desktop'];
+      const tablet  = data['Responsive.Tablet'];
+      const mobile  = data['Responsive.Mobile'];
+
+      const dSizes = getFontSizes(desktop);
+      const tSizes = getFontSizes(tablet);
+      const mSizes = getFontSizes(mobile);
+
+      /* --- Live type samples --- */
+      body.appendChild(sectionLabel('Type scale (desktop sizes)'));
+
+      for (const name of SIZE_ORDER) {
+        const px = dSizes[name];
+        if (px === undefined) continue;
+
+        const sample = el('div', { className: 'type-sample' });
+
+        const header = el('div', { className: 'type-sample-header' });
+        header.appendChild(el('span', { className: 'type-sample-label', text: name }));
+        header.appendChild(el('span', {
+          className: 'type-sample-values',
+          html: `<span>D: ${dSizes[name] ?? '—'}px</span><span>T: ${tSizes[name] ?? '—'}px</span><span>M: ${mSizes[name] ?? '—'}px</span>`,
+        }));
+        sample.appendChild(header);
+
+        sample.appendChild(el('div', {
+          className: 'type-sample-text',
+          text: 'The quick brown fox jumps over the lazy dog',
+          style: { fontSize: `${px}px` },
+        }));
+
+        body.appendChild(sample);
+      }
+
+      /* --- Breakpoint comparison table --- */
+      body.appendChild(sectionLabel('Font sizes across breakpoints'));
+
+      const table = el('table', { className: 'breakpoint-table' });
+      const thead = el('thead');
+      const hRow = el('tr');
+      for (const h of ['Size', 'Mobile', 'Tablet', 'Desktop']) {
+        hRow.appendChild(el('th', { text: h }));
+      }
+      thead.appendChild(hRow);
+      table.appendChild(thead);
+
+      const tbody = el('tbody');
+      for (const name of SIZE_ORDER) {
+        const row = el('tr');
+        row.appendChild(el('td', { className: 'row-label', text: name }));
+        row.appendChild(el('td', { text: mSizes[name] !== undefined ? `${mSizes[name]}px` : '—' }));
+        row.appendChild(el('td', { text: tSizes[name] !== undefined ? `${tSizes[name]}px` : '—' }));
+        row.appendChild(el('td', { text: dSizes[name] !== undefined ? `${dSizes[name]}px` : '—' }));
+        tbody.appendChild(row);
+      }
+      table.appendChild(tbody);
+      body.appendChild(table);
+
+      /* --- Breakpoint widths --- */
+      body.appendChild(sectionLabel('Breakpoint widths'));
+
+      const widthTable = el('table', { className: 'breakpoint-table' });
+      const wHead = el('thead');
+      const whRow = el('tr');
+      for (const h of ['Breakpoint', 'Width']) {
+        whRow.appendChild(el('th', { text: h }));
+      }
+      wHead.appendChild(whRow);
+      widthTable.appendChild(wHead);
+
+      const wBody = el('tbody');
+      for (const [label, json] of [['Mobile', mobile], ['Tablet', tablet], ['Desktop', desktop]]) {
+        const row = el('tr');
+        row.appendChild(el('td', { className: 'row-label', text: label }));
+        row.appendChild(el('td', { text: `${json.Width?.$value ?? '—'}px` }));
+        wBody.appendChild(row);
+      }
+      widthTable.appendChild(wBody);
+      body.appendChild(widthTable);
+
+      /* --- Grid settings --- */
+      body.appendChild(sectionLabel('Grid settings'));
+
+      const dGrid = getGridSettings(desktop);
+      const tGrid = getGridSettings(tablet);
+      const mGrid = getGridSettings(mobile);
+
+      const gTable = el('table', { className: 'breakpoint-table' });
+      const gHead = el('thead');
+      const ghRow = el('tr');
+      for (const h of ['Setting', 'Mobile', 'Tablet', 'Desktop']) {
+        ghRow.appendChild(el('th', { text: h }));
+      }
+      gHead.appendChild(ghRow);
+      gTable.appendChild(gHead);
+
+      const gBody = el('tbody');
+      const gridRows = [
+        ['Columns', 'columns'],
+        ['Margin', 'margin'],
+        ['Gutter', 'gutter'],
+        ['Vertical Tight', 'verticalTight'],
+        ['Vertical Default', 'verticalDefault'],
+        ['Vertical Loose', 'verticalLoose'],
+      ];
+
+      for (const [label, key] of gridRows) {
+        const row = el('tr');
+        row.appendChild(el('td', { className: 'row-label', text: label }));
+        row.appendChild(el('td', { text: mGrid[key] !== undefined ? `${mGrid[key]}px` : '—' }));
+        row.appendChild(el('td', { text: tGrid[key] !== undefined ? `${tGrid[key]}px` : '—' }));
+        row.appendChild(el('td', { text: dGrid[key] !== undefined ? `${dGrid[key]}px` : '—' }));
+        gBody.appendChild(row);
+      }
+      gTable.appendChild(gBody);
+      body.appendChild(gTable);
+
+      /* --- Grid overlay preview --- */
+      body.appendChild(sectionLabel('Grid overlay preview'));
+
+      for (const [label, grid, widthVal] of [
+        ['Mobile', mGrid, mobile.Width?.$value],
+        ['Tablet', tGrid, tablet.Width?.$value],
+        ['Desktop', dGrid, desktop.Width?.$value],
+      ]) {
+        const cols = grid.columns || 2;
+        const gutter = grid.gutter || 8;
+        const margin = grid.margin || 8;
+
+        body.appendChild(el('h4', {
+          text: `${label} (${widthVal}px — ${cols} columns)`,
+          style: { margin: '16px 0 8px', fontSize: '0.85rem', fontWeight: '500' },
+        }));
+
+        const preview = el('div', {
+          className: 'grid-preview',
+          style: {
+            maxWidth: `${Math.min(widthVal, 900)}px`,
+            '--grid-gutter': `${gutter}px`,
+            '--grid-margin': `${margin}px`,
+          },
+        });
+
+        const colsWrap = el('div', { className: 'grid-columns' });
+        for (let i = 0; i < cols; i++) {
+          colsWrap.appendChild(el('div', { className: 'grid-col' }));
+        }
+        preview.appendChild(colsWrap);
+        preview.appendChild(el('div', {
+          className: 'grid-label',
+          text: `${cols} col · ${margin}px margin · ${gutter}px gutter`,
+        }));
+
+        body.appendChild(preview);
+      }
+    });
+  </script>
+</body>
+</html>

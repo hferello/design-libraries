@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colours — Design Token Reference</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" aria-label="Sidebar"></aside>
+    <main class="main" id="content">
+      <header class="page-header">
+        <h2>Colours</h2>
+        <p>Primitive palette ramps and semantic colour tokens with WCAG contrast ratings.</p>
+      </header>
+      <div id="toolbar" class="toolbar"></div>
+      <div id="page-body">
+        <div class="loading">Loading tokens…</div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initPage, el, sectionLabel } from './js/render.js';
+    import {
+      flattenTokens, colourHex, aliasName,
+      groupPrimitiveColours, groupSemanticColours, getEffectsOpacityColours,
+    } from './js/tokens.js';
+    import { contrastInfo, textColourOnBg } from './js/wcag.js';
+
+    let currentView = 'grid';
+    let currentMode = 'light';
+
+    function buildToolbar() {
+      const toolbar = document.getElementById('toolbar');
+      toolbar.innerHTML = '';
+
+      const viewToggle = el('div', { className: 'view-toggle' });
+      for (const v of ['grid', 'strip', 'list']) {
+        const btn = el('button', {
+          text: v.charAt(0).toUpperCase() + v.slice(1),
+          className: v === currentView ? 'active' : '',
+        });
+        btn.addEventListener('click', () => {
+          currentView = v;
+          buildToolbar();
+          renderPage();
+        });
+        viewToggle.appendChild(btn);
+      }
+      toolbar.appendChild(viewToggle);
+
+      const modeToggle = el('div', { className: 'mode-toggle' });
+      for (const m of ['light', 'dark']) {
+        const btn = el('button', {
+          text: m.charAt(0).toUpperCase() + m.slice(1),
+          className: m === currentMode ? 'active' : '',
+        });
+        btn.addEventListener('click', () => {
+          currentMode = m;
+          buildToolbar();
+          renderPage();
+        });
+        modeToggle.appendChild(btn);
+      }
+      toolbar.appendChild(modeToggle);
+    }
+
+    let cachedData = null;
+
+    function renderPage() {
+      if (!cachedData) return;
+      const data = cachedData;
+      const body = document.getElementById('page-body');
+      body.innerHTML = '';
+
+      const primitives = groupPrimitiveColours(data['Primatives']);
+      body.appendChild(sectionLabel('Primitive palette'));
+
+      if (currentView === 'strip') {
+        renderStrips(body, primitives);
+      } else if (currentView === 'list') {
+        renderList(body, primitives, true);
+      } else {
+        renderGrid(body, primitives, true);
+      }
+
+      const modeKey = currentMode === 'dark' ? 'Colours.Dark' : 'Colours.Light';
+      const semantics = groupSemanticColours(data[modeKey]);
+
+      body.appendChild(sectionLabel(`Semantic colours (${currentMode})`));
+
+      if (currentView === 'strip') {
+        renderStrips(body, semantics);
+      } else if (currentView === 'list') {
+        renderList(body, semantics, false);
+      } else {
+        renderGrid(body, semantics, false);
+      }
+    }
+
+    /* ---- Grid view ---- */
+    function renderGrid(container, groups, isPrimitive) {
+      for (const [name, tokens] of Object.entries(groups)) {
+        container.appendChild(el('h4', {
+          text: name,
+          style: { margin: '20px 0 10px', fontSize: '0.9rem', fontWeight: '600' },
+        }));
+
+        const grid = el('div', { className: 'swatches-grid' });
+
+        for (const token of tokens) {
+          const hex = colourHex(token);
+          if (!hex) continue;
+
+          const card = el('div', { className: 'swatch-card' });
+          const block = el('div', {
+            className: 'color-block',
+            style: { background: hex },
+          });
+          card.appendChild(block);
+
+          const info = el('div', { className: 'card-info' });
+          info.appendChild(el('span', { className: 'token-name', text: token.path.join(' / ') }));
+          info.appendChild(el('span', { className: 'token-value', text: hex }));
+
+          const alias = aliasName(token);
+          if (alias) {
+            info.appendChild(el('span', { className: 'token-alias', text: alias }));
+          }
+
+          if (token.$description) {
+            info.appendChild(el('span', { className: 'token-alias', text: token.$description }));
+          }
+
+          const ci = contrastInfo(hex);
+          const wcagRow = el('div', { className: 'wcag-row' });
+          wcagRow.appendChild(wcagBadge('W', ci.onWhite));
+          wcagRow.appendChild(wcagBadge('B', ci.onBlack));
+          info.appendChild(wcagRow);
+
+          card.appendChild(info);
+          grid.appendChild(card);
+        }
+
+        container.appendChild(grid);
+      }
+    }
+
+    /* ---- Strip view ---- */
+    function renderStrips(container, groups) {
+      for (const [name, tokens] of Object.entries(groups)) {
+        container.appendChild(el('h4', {
+          text: name,
+          style: { margin: '20px 0 10px', fontSize: '0.9rem', fontWeight: '600' },
+        }));
+
+        const strip = el('div', { className: 'swatches-strip' });
+
+        for (const token of tokens) {
+          const hex = colourHex(token);
+          if (!hex) continue;
+
+          const fg = textColourOnBg(hex);
+          const cell = el('div', {
+            className: 'strip-cell',
+            style: { background: hex },
+          });
+          cell.appendChild(el('span', {
+            className: 'strip-label',
+            text: hex,
+            style: { color: fg, background: hex === '#FFFFFF' || hex === '#ffffff' ? 'rgba(0,0,0,0.08)' : 'transparent' },
+          }));
+          cell.setAttribute('title', `${token.path.join(' / ')} — ${hex}`);
+          strip.appendChild(cell);
+        }
+
+        container.appendChild(strip);
+      }
+    }
+
+    /* ---- List view ---- */
+    function renderList(container, groups, isPrimitive) {
+      for (const [name, tokens] of Object.entries(groups)) {
+        container.appendChild(el('h4', {
+          text: name,
+          style: { margin: '20px 0 10px', fontSize: '0.9rem', fontWeight: '600' },
+        }));
+
+        const table = el('table', { className: 'breakpoint-table' });
+        const thead = el('thead');
+        const headRow = el('tr');
+        for (const h of ['Swatch', 'Token', 'Hex', 'Alias', 'WCAG vs White', 'WCAG vs Black']) {
+          headRow.appendChild(el('th', { text: h }));
+        }
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+
+        const tbody = el('tbody');
+        for (const token of tokens) {
+          const hex = colourHex(token);
+          if (!hex) continue;
+
+          const row = el('tr');
+
+          const swatchTd = el('td');
+          swatchTd.appendChild(el('div', {
+            style: { width: '32px', height: '32px', borderRadius: '4px', background: hex, border: '1px solid var(--border)' },
+          }));
+          row.appendChild(swatchTd);
+
+          row.appendChild(el('td', { className: 'row-label', text: token.path.join(' / ') }));
+          row.appendChild(el('td', { text: hex }));
+          row.appendChild(el('td', { text: aliasName(token) || '—' }));
+
+          const ci = contrastInfo(hex);
+          const wTd = el('td');
+          wTd.appendChild(wcagBadge('', ci.onWhite));
+          row.appendChild(wTd);
+
+          const bTd = el('td');
+          bTd.appendChild(wcagBadge('', ci.onBlack));
+          row.appendChild(bTd);
+
+          tbody.appendChild(row);
+        }
+        table.appendChild(tbody);
+        container.appendChild(table);
+      }
+    }
+
+    /* ---- Badge builder ---- */
+    function wcagBadge(prefix, info) {
+      const pass = info.level !== 'Fail';
+      const label = prefix
+        ? `${prefix} ${info.ratio.toFixed(1)} ${info.level}`
+        : `${info.ratio.toFixed(1)} ${info.level}`;
+      return el('span', {
+        className: `wcag-badge ${pass ? 'pass' : 'fail'}`,
+        text: label,
+      });
+    }
+
+    buildToolbar();
+    initPage((data) => {
+      cachedData = data;
+      buildToolbar();
+      renderPage();
+    });
+  </script>
+</body>
+</html>

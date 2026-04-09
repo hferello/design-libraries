@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design Token Reference</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" aria-label="Sidebar"></aside>
+    <main class="main" id="content">
+      <header class="page-header">
+        <h2>Design Token Reference</h2>
+        <p>Visual reference for Figma design tokens across three ratio-based libraries.</p>
+      </header>
+      <div id="page-body">
+        <div class="loading">Loading tokens…</div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initPage } from './js/render.js';
+    import { el, sectionLabel } from './js/render.js';
+    import { getLibraryLabels, getCurrentLibraryKey } from './js/tokens.js';
+
+    const CATEGORIES = [
+      {
+        href: 'colours.html',
+        title: 'Colours',
+        desc: 'Primitive palette ramps and semantic colour tokens with WCAG contrast ratings for both light and dark modes.',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>`,
+      },
+      {
+        href: 'spacing.html',
+        title: 'Spacing',
+        desc: 'Positive and negative spacing scales with descriptive names and visual bar proportions.',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 6H3"/><path d="M17 12H7"/><path d="M19 18H5"/></svg>`,
+      },
+      {
+        href: 'typography.html',
+        title: 'Typography',
+        desc: 'Font size scale rendered at actual size with three-breakpoint comparison and grid settings.',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>`,
+      },
+      {
+        href: 'sizes.html',
+        title: 'Sizes',
+        desc: 'Border radius preview, border weights, blur levels, and opacity steps from the Effects set.',
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>`,
+      },
+    ];
+
+    initPage((data) => {
+      const body = document.getElementById('page-body');
+      body.innerHTML = '';
+
+      const labels = getLibraryLabels();
+      const currentKey = getCurrentLibraryKey();
+
+      const info = el('div', { className: 'info-box' });
+      info.appendChild(el('h3', { text: labels[currentKey] }));
+      info.appendChild(el('p', {
+        text: 'This site renders exported Figma design tokens in DTCG format. ' +
+              'Switch between the three ratio-based libraries using the dropdown in the sidebar. ' +
+              'Each library shares the same token structure but uses a different mathematical ratio ' +
+              'to derive its spacing, type, and sizing scales.',
+      }));
+      body.appendChild(info);
+
+      body.appendChild(sectionLabel('Token categories'));
+
+      const grid = el('div', { className: 'category-grid' });
+      for (const cat of CATEGORIES) {
+        const card = el('a', {
+          className: 'category-card',
+          attrs: { href: cat.href },
+        });
+        card.innerHTML = cat.icon;
+        card.appendChild(el('h3', { text: cat.title }));
+        card.appendChild(el('p', { text: cat.desc }));
+        grid.appendChild(card);
+      }
+      body.appendChild(grid);
+
+      body.appendChild(sectionLabel('About the ratio systems'));
+
+      const about = el('div', { className: 'info-box' });
+      about.innerHTML = `
+        <p><strong>Golden Ratio</strong> — scales derived from the φ (1.618…) sequence: 1, 2, 4, 8, 13, 21, 34, 55, 89, 144, 232, 376, 608.</p>
+        <p style="margin-top:8px"><strong>Base 10 Ratio</strong> — decimal-friendly scale using powers of 10 and round subdivisions.</p>
+        <p style="margin-top:8px"><strong>Typographic Ratio</strong> — scale optimised for typographic harmony, based on traditional type ratios.</p>
+      `;
+      body.appendChild(about);
+    });
+  </script>
+</body>
+</html>
