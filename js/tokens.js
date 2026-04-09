@@ -1,15 +1,12 @@
 /**
  * Token loader — fetches DTCG-format JSON for any library and
  * normalises it into flat maps the renderers can consume.
- *
- * Library folders use an en-dash in their names, so we encode
- * the path with encodeURI to keep fetch() happy.
  */
 
 const LIBRARIES = {
-  golden:      'Golden Ratio \u2013 Design Library by Hal',
-  base10:      'Base 10 ratio \u2013 Design Library by Hal',
-  typographic: 'Typographic ratio \u2013 Design Library by Hal',
+  golden:      'libraries/golden-ratio',
+  base10:      'libraries/base-10-ratio',
+  typographic: 'libraries/typographic-ratio',
 };
 
 const LIBRARY_LABELS = {
@@ -51,7 +48,7 @@ export async function loadLibrary(key) {
 
   const entries = await Promise.all(
     TOKEN_FILES.map(async (file) => {
-      const url = encodeURI(`${folder}/${file}`);
+      const url = `${folder}/${file}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error(`Failed to load ${url}: ${res.status}`);
       const json = await res.json();
