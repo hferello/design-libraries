@@ -99,6 +99,12 @@ function buildSidebar(currentFile) {
       }).join('')}
     </nav>
 
+    <div class="sidebar-nav">
+      <a href="llms.txt" target="_blank" rel="noopener" aria-label="LLMs">
+        <span>LLMs.txt</span>
+      </a>
+    </div>
+
     <div class="theme-toggle">
       <button id="theme-btn" type="button" aria-label="Toggle site theme">
         <span class="theme-icon">${ICONS.moon}</span>

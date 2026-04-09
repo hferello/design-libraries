@@ -1,0 +1,154 @@
+# Design Libraries by Hal
+
+> Three ratio-based Figma design token libraries (Golden Ratio, Typographic Ratio, Base 10) exported as DTCG JSON, with an npm package that compiles them into CSS custom properties and a Tailwind v4 theme.
+
+## Overview
+
+Each library answers the question "where do the values in your design system come from?" using a different mathematical foundation. All three share the same token structure — 10 DTCG-format JSON files covering colours, spacing, typography, sizes, effects, and responsive breakpoints — but derive their scales from different ratios.
+
+- **Golden Ratio** — φ = 1.618, applied from a base of 8px. Fibonacci-like progression: 0, 1, 2, 4, 8, 13, 21, 34, 55, 89, 144, 232, 376, 608.
+- **Typographic Ratio** — classical type scale accumulated over centuries of print and screen typography.
+- **Base 10** — round numbers in multiples of 10 with mid-steps for finer control.
+
+## NPM Package
+
+The npm package `@hferello/design-libraries-npm` transforms the DTCG token JSON into three CSS files per library using Style Dictionary v4.
+
+Install from GitHub Packages:
+
+```
+npm install @hferello/design-libraries-npm --registry=https://npm.pkg.github.com
+```
+
+### Usage
+
+For a Tailwind v4 project, import the tailwind-theme.css for your chosen library:
+
+```css
+@import "@hferello/design-libraries-npm/golden-ratio/tailwind-theme.css";
+```
+
+For a non-Tailwind project, import tokens.css instead:
+
+```css
+@import "@hferello/design-libraries-npm/golden-ratio/tokens.css";
+```
+
+Replace `golden-ratio` with `typographic-ratio` or `base-10-ratio` as needed.
+
+### Output Files
+
+Each library produces three CSS files:
+
+- `primitives.css` — raw palette values in `:root` (number scale, colour hues, transparent overlays)
+- `tokens.css` — semantic layer with `var(--primitive-*)` alias references, `.dark` overrides, and responsive `@media` breakpoints
+- `tailwind-theme.css` — Tailwind v4 entry point splitting tokens into `@theme static` (generates utility classes) and `:root` (plain CSS variables)
+
+### CSS Variable Namespaces
+
+Tokens inside `@theme static` that generate Tailwind utility classes:
+
+| Category | CSS namespace | Utility examples |
+|---|---|---|
+| Spacing (11 values) | `--spacing-*` | `p-tight`, `gap-section`, `m-apart` |
+| Grid spatial | `--spacing-grid-*` | `gap-grid-gutter`, `p-grid-margin` |
+| Font sizes (7 values) | `--text-*` | `text-xs`, `text-base`, `text-2xl` |
+| Border radius (6 values) | `--radius-*` | `rounded-soft`, `rounded-pill` |
+| Blur (4 values) | `--blur-*` | `blur-soft`, `blur-void` |
+| All colours | `--color-*` | `bg-neutral-base`, `text-fg-neutral-aa` |
+
+Plain CSS variables (access via arbitrary values in Tailwind):
+
+| Category | Variable | Tailwind access |
+|---|---|---|
+| Grid columns | `--grid-columns` | `grid-cols-[var(--grid-columns)]` |
+| Border weight (4 values) | `--border-*` | `border-[length:var(--border-hairline)]` |
+| Opacity (5 values) | `--opacity-*` | `opacity-[var(--opacity-high)]` |
+
+### Spacing Name Mapping
+
+Figma's descriptive token names map to concise CSS names:
+
+| Figma token name | CSS variable | Value pattern |
+|---|---|---|
+| Flush | `--spacing-flush` | 0 |
+| Tightly related, one unit | `--spacing-tight` | scale step 1 |
+| Clearly paired, slight breath | `--spacing-paired` | scale step 2 |
+| Same group, distinct items | `--spacing-grouped` | scale step 3 |
+| Loose group, breathing room | `--spacing-loose` | scale step 4 |
+| Distinct sections, clear gap | `--spacing-section` | scale step 5 |
+| Independent, different context | `--spacing-independent` | scale step 6 |
+| New section | `--spacing-region` | scale step 7 |
+| Clear visual break between zones | `--spacing-zone` | scale step 8 |
+| Unrelated, structural separation | `--spacing-divide` | scale step 9 |
+| Very far apart | `--spacing-apart` | scale step 10 |
+
+### Font Size Mapping
+
+| Figma name | CSS variable |
+|---|---|
+| XSmall | `--text-xs` |
+| Small | `--text-sm` |
+| Regular | `--text-base` |
+| Medium | `--text-md` |
+| Large | `--text-lg` |
+| XLarge | `--text-xl` |
+| XXLarge | `--text-2xl` |
+
+### Sizes Mapping
+
+Border radius: `--radius-sharp`, `--radius-subtle`, `--radius-soft`, `--radius-rounded`, `--radius-pill`, `--radius-circular`
+
+Border weight: `--border-hairline`, `--border-defined`, `--border-bold`, `--border-graphic`
+
+Blur: `--blur-soft`, `--blur-hazy`, `--blur-foggy`, `--blur-void`
+
+Opacity: `--opacity-full`, `--opacity-high`, `--opacity-medium`, `--opacity-low`, `--opacity-faint`
+
+### Colour Naming Convention
+
+Semantic colours follow this pattern:
+
+- Surface neutrals: `--color-neutral-{level}` (base, faint, subtle, etc.)
+- Surface hues: `--color-{hue}-{level}` (blue-base, green-bold, etc.)
+- Foreground neutrals: `--color-fg-neutral-{level}` (aa, aaa, dark, etc.)
+- Foreground hues: `--color-fg-{hue}-{level}`
+- Icon colours: `--color-icon-{name}` (subtle, base, bold, inverse, blue, etc.)
+- Overlays: `--color-overlay-{pct}` (0, 8, 12, 16, 24, 36, 48, 60, 72, 96)
+
+Dark mode overrides are scoped to `.dark` or `[data-theme="dark"]`.
+
+Primitive colours: `--primitive-color-{hue}-{step}` (e.g. `--primitive-color-neutral-100`, `--primitive-color-blue-500`)
+
+### Responsive Behaviour
+
+The package generates range-based media queries:
+
+- Desktop: default (no media query)
+- Tablet: `@media (min-width: 768px) and (max-width: 1199px)`
+- Mobile: `@media (max-width: 767px)`
+
+Font sizes and grid settings adjust per breakpoint automatically.
+
+## Token Source Files
+
+Each library folder contains 10 DTCG-format JSON files:
+
+- `Colours.Light.tokens.json` — semantic colours for light mode
+- `Colours.Dark.tokens.json` — semantic colours for dark mode
+- `Primatives.tokens.json` — raw colour palette and number scale
+- `Spacing.Positive.tokens.json` — positive spacing scale
+- `Spacing.Negative.tokens.json` — negative spacing scale (Figma-internal)
+- `Sizes.tokens.json` — border radius and border weight
+- `Effects.tokens.json` — blur and opacity levels
+- `Responsive.Desktop.tokens.json` — font sizes, grid settings (desktop)
+- `Responsive.Tablet.tokens.json` — font sizes, grid settings (tablet)
+- `Responsive.Mobile.tokens.json` — font sizes, grid settings (mobile)
+
+## Links
+
+- [NPM Package (GitHub)](https://github.com/hferello/design-libraries-npm): Source code and build pipeline
+- [Token Reference Site](https://hferello.github.io/design-libraries/): Visual reference for all token values
+- [Golden Ratio Figma Library](https://lnkd.in/e9gqH7Np): Free on Figma Community
+- [Typographic Ratio Figma Library](https://lnkd.in/efJe88uR): Free on Figma Community
+- [Base 10 Figma Library](https://lnkd.in/eqNstcZr): Free on Figma Community
