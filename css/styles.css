@@ -52,7 +52,7 @@
 }
 
 html {
-  font-size: 16px;
+  font-size: 24px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -247,6 +247,38 @@ a:hover {
   height: 16px;
 }
 
+/* ----- Aside Footer ----- */
+
+.aside-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.aside-footer > span {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-faint);
+}
+
+.aside-footer-links {
+  display: flex;
+  gap: 12px;
+}
+
+.aside-footer-links a {
+  color: var(--text-faint);
+  transition: color var(--transition);
+  display: flex;
+}
+
+.aside-footer-links a:hover {
+  color: var(--accent);
+}
+
 /* ----- Mobile Menu Toggle ----- */
 
 .mobile-menu-toggle {
@@ -339,6 +371,14 @@ a:hover {
 .view-toggle button.active {
   background: var(--bg-panel);
   color: var(--accent);
+}
+
+#colour-filter {
+  margin-bottom: 12px;
+}
+
+.colour-filter {
+  flex-wrap: wrap;
 }
 
 /* ----- Mode Toggle (Light/Dark tokens) ----- */
@@ -855,7 +895,6 @@ a:hover {
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
-  margin-bottom: 24px;
 }
 
 /* ----- Loading State ----- */

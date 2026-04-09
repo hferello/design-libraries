@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Figma Files — Design Libraries by Hal</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .figma-intro {
+      max-width: 640px;
+      margin-bottom: 40px;
+    }
+
+    .figma-intro p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+
+    .figma-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .figma-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: all var(--transition);
+    }
+
+    .figma-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+
+    .figma-card h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .figma-card .figma-ratio {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+    }
+
+    .figma-card p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .figma-card .figma-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: auto;
+      padding: 8px 16px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--accent);
+      transition: all var(--transition);
+      width: fit-content;
+    }
+
+    .figma-card .figma-link:hover {
+      border-color: var(--accent);
+      color: var(--accent-hover);
+    }
+
+    .figma-card .figma-link svg {
+      width: 16px;
+      height: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" aria-label="Sidebar"></aside>
+    <main class="main" id="content">
+      <header class="page-header">
+        <h2>Figma Files</h2>
+        <p>Free design libraries on Figma Community.</p>
+      </header>
+
+      <div class="figma-intro">
+        <p>I've been building a series of Figma design libraries. Each one is a different answer to the same question: <strong>where do the values in your design system actually come from?</strong></p>
+        <p>Three libraries, three different answers. All free on Figma Community.</p>
+      </div>
+
+      <div class="figma-cards">
+
+        <div class="figma-card">
+          <h3>Golden Ratio</h3>
+          <span class="figma-ratio">&phi; = 1.618</span>
+          <p>Built on the golden ratio, applied from a base of 8px. Every spacing value is mathematically connected to the next. The same proportional logic found in nature, architecture, and music. Not a style, a foundation.</p>
+          <a href="https://lnkd.in/e9gqH7Np" target="_blank" rel="noopener" class="figma-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z"/><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z"/><path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z"/><path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z"/><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z"/></svg>
+            Open in Figma
+          </a>
+        </div>
+
+        <div class="figma-card">
+          <h3>Typographic Ratio</h3>
+          <span class="figma-ratio">Classical type scale</span>
+          <p>Built on the classical type scale. Sizes that have been used in print, on screens, in every medium type has ever lived in. They don't need justifying. They arrive already related to each other, accumulated over centuries of people working out what the eye finds natural.</p>
+          <a href="https://lnkd.in/efJe88uR" target="_blank" rel="noopener" class="figma-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z"/><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z"/><path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z"/><path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z"/><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z"/></svg>
+            Open in Figma
+          </a>
+        </div>
+
+        <div class="figma-card">
+          <h3>Base 10</h3>
+          <span class="figma-ratio">Multiples of 10</span>
+          <p>Round numbers in multiples of 10, with mid-steps for finer control. Simple values that are easy to apply consistently. Sometimes the math is just clarity.</p>
+          <a href="https://lnkd.in/eqNstcZr" target="_blank" rel="noopener" class="figma-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z"/><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z"/><path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z"/><path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z"/><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z"/></svg>
+            Open in Figma
+          </a>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initPage } from './js/render.js';
+    initPage();
+  </script>
+</body>
+</html>

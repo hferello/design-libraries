@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Colours — Design Token Reference</title>
+  <title>Colours — Design Libraries by Hal</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -15,6 +15,7 @@
         <p>Primitive palette ramps and semantic colour tokens with WCAG contrast ratings.</p>
       </header>
       <div id="toolbar" class="toolbar"></div>
+      <div id="colour-filter"></div>
       <div id="page-body">
         <div class="loading">Loading tokens…</div>
       </div>
@@ -31,6 +32,16 @@
 
     let currentView = 'grid';
     let currentMode = 'light';
+    let currentColourFilter = 'all';
+
+    /** Collect every unique colour group name across primitives + semantics. */
+    function getColourGroupNames(data) {
+      const primitives = groupPrimitiveColours(data['Primatives']);
+      const modeKey = currentMode === 'dark' ? 'Colours.Dark' : 'Colours.Light';
+      const semantics = groupSemanticColours(data[modeKey]);
+      const names = new Set([...Object.keys(primitives), ...Object.keys(semantics)]);
+      return [...names];
+    }
 
     function buildToolbar() {
       const toolbar = document.getElementById('toolbar');
@@ -65,9 +76,51 @@
         modeToggle.appendChild(btn);
       }
       toolbar.appendChild(modeToggle);
+
+      const filterContainer = document.getElementById('colour-filter');
+      filterContainer.innerHTML = '';
+
+      if (cachedData) {
+        const groups = getColourGroupNames(cachedData);
+        const filterToggle = el('div', { className: 'view-toggle colour-filter' });
+
+        const allBtn = el('button', {
+          text: 'All',
+          className: currentColourFilter === 'all' ? 'active' : '',
+        });
+        allBtn.addEventListener('click', () => {
+          currentColourFilter = 'all';
+          buildToolbar();
+          renderPage();
+        });
+        filterToggle.appendChild(allBtn);
+
+        for (const name of groups) {
+          const btn = el('button', {
+            text: name,
+            className: currentColourFilter === name ? 'active' : '',
+          });
+          btn.addEventListener('click', () => {
+            currentColourFilter = name;
+            buildToolbar();
+            renderPage();
+          });
+          filterToggle.appendChild(btn);
+        }
+        filterContainer.appendChild(filterToggle);
+      }
     }
 
     let cachedData = null;
+
+    /** Filter a groups object to only the selected colour, or return all. */
+    function applyFilter(groups) {
+      if (currentColourFilter === 'all') return groups;
+      if (groups[currentColourFilter]) {
+        return { [currentColourFilter]: groups[currentColourFilter] };
+      }
+      return {};
+    }
 
     function renderPage() {
       if (!cachedData) return;
@@ -75,28 +128,32 @@
       const body = document.getElementById('page-body');
       body.innerHTML = '';
 
-      const primitives = groupPrimitiveColours(data['Primatives']);
-      body.appendChild(sectionLabel('Primitive palette'));
+      const primitives = applyFilter(groupPrimitiveColours(data['Primatives']));
+      if (Object.keys(primitives).length > 0) {
+        body.appendChild(sectionLabel('Primitive palette'));
 
-      if (currentView === 'strip') {
-        renderStrips(body, primitives);
-      } else if (currentView === 'list') {
-        renderList(body, primitives, true);
-      } else {
-        renderGrid(body, primitives, true);
+        if (currentView === 'strip') {
+          renderStrips(body, primitives);
+        } else if (currentView === 'list') {
+          renderList(body, primitives, true);
+        } else {
+          renderGrid(body, primitives, true);
+        }
       }
 
       const modeKey = currentMode === 'dark' ? 'Colours.Dark' : 'Colours.Light';
-      const semantics = groupSemanticColours(data[modeKey]);
+      const semantics = applyFilter(groupSemanticColours(data[modeKey]));
 
-      body.appendChild(sectionLabel(`Semantic colours (${currentMode})`));
+      if (Object.keys(semantics).length > 0) {
+        body.appendChild(sectionLabel(`Semantic colours (${currentMode})`));
 
-      if (currentView === 'strip') {
-        renderStrips(body, semantics);
-      } else if (currentView === 'list') {
-        renderList(body, semantics, false);
-      } else {
-        renderGrid(body, semantics, false);
+        if (currentView === 'strip') {
+          renderStrips(body, semantics);
+        } else if (currentView === 'list') {
+          renderList(body, semantics, false);
+        } else {
+          renderGrid(body, semantics, false);
+        }
       }
     }
 
