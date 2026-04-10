@@ -1,10 +1,10 @@
-# Design Libraries by Hal
+# Number System by Hal
 
-> Three ratio-based Figma design token libraries (Golden Ratio, Typographic Ratio, Base 10) exported as DTCG JSON, with an npm package that compiles them into CSS custom properties and a Tailwind v4 theme.
+> Three ratio-based number systems (Golden Ratio, Typographic Ratio, Base 10) exported as DTCG JSON from Figma, with an npm package that compiles them into CSS custom properties and a Tailwind v4 theme.
 
 ## Overview
 
-Each library answers the question "where do the values in your design system come from?" using a different mathematical foundation. All three share the same token structure — 10 DTCG-format JSON files covering colours, spacing, typography, sizes, effects, and responsive breakpoints — but derive their scales from different ratios.
+Each number system answers the question "where do the values in your design system come from?" using a different mathematical foundation. All three share the same token structure — 10 DTCG-format JSON files covering colours, spacing, typography, sizes, effects, and responsive breakpoints — but derive their scales from different ratios.
 
 - **Golden Ratio** — φ = 1.618, applied from a base of 8px. Fibonacci-like progression: 0, 1, 2, 4, 8, 13, 21, 34, 55, 89, 144, 232, 376, 608.
 - **Typographic Ratio** — classical type scale accumulated over centuries of print and screen typography.
@@ -12,7 +12,7 @@ Each library answers the question "where do the values in your design system com
 
 ## NPM Package
 
-The npm package `@hferello/design-libraries-npm` transforms the DTCG token JSON into three CSS files per library using Style Dictionary v4.
+The npm package `@hferello/design-libraries-npm` transforms the DTCG token JSON into three CSS files per ratio system using Style Dictionary v4.
 
 Install from GitHub Packages:
 
@@ -22,7 +22,7 @@ npm install @hferello/design-libraries-npm --registry=https://npm.pkg.github.com
 
 ### Usage
 
-For a Tailwind v4 project, import the tailwind-theme.css for your chosen library:
+For a Tailwind v4 project, import the tailwind-theme.css for your chosen ratio system:
 
 ```css
 @import "@hferello/design-libraries-npm/golden-ratio/tailwind-theme.css";
@@ -38,7 +38,7 @@ Replace `golden-ratio` with `typographic-ratio` or `base-10-ratio` as needed.
 
 ### Output Files
 
-Each library produces three CSS files:
+Each ratio system produces three CSS files:
 
 - `primitives.css` — raw palette values in `:root` (number scale, colour hues, transparent overlays)
 - `tokens.css` — semantic layer with `var(--primitive-*)` alias references, `.dark` overrides, and responsive `@media` breakpoints
@@ -132,7 +132,7 @@ Font sizes and grid settings adjust per breakpoint automatically.
 
 ## Token Source Files
 
-Each library folder contains 10 DTCG-format JSON files:
+Each ratio folder contains 10 DTCG-format JSON files:
 
 - `Colours.Light.tokens.json` — semantic colours for light mode
 - `Colours.Dark.tokens.json` — semantic colours for dark mode
@@ -148,7 +148,7 @@ Each library folder contains 10 DTCG-format JSON files:
 ## Links
 
 - [NPM Package (GitHub)](https://github.com/hferello/design-libraries-npm): Source code and build pipeline
-- [Token Reference Site](https://hferello.github.io/design-libraries/): Visual reference for all token values
+- [Number System reference site](https://hferello.github.io/number-system/): Visual reference for all token values
 - [Golden Ratio Figma Library](https://lnkd.in/e9gqH7Np): Free on Figma Community
 - [Typographic Ratio Figma Library](https://lnkd.in/efJe88uR): Free on Figma Community
 - [Base 10 Figma Library](https://lnkd.in/eqNstcZr): Free on Figma Community

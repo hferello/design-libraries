@@ -79,13 +79,13 @@ function buildSidebar(currentFile) {
 
   sidebar.innerHTML = `
     <div class="sidebar-brand">
-      <h1>Design Libraries</h1>
+      <h1>Number System</h1>
       <span>Reference Library</span>
     </div>
 
     <div class="library-switcher">
-      <label for="library-select">Library</label>
-      <select id="library-select" aria-label="Choose design library">
+      <label for="library-select">System</label>
+      <select id="library-select" aria-label="Choose ratio system">
         ${Object.keys(libs).map((k) =>
           `<option value="${k}">${labels[k]}</option>`
         ).join('')}
