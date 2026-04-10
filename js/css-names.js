@@ -1,6 +1,6 @@
 /**
  * CSS variable name mappings mirroring the Number System npm package
- * (@hferello/design-libraries-npm)
+ * (@hferello/number-system-npm)
  * Style Dictionary pipeline. Produces the same --var names the package exports.
  */
 

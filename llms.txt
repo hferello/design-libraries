@@ -12,12 +12,12 @@ Each number system answers the question "where do the values in your design syst
 
 ## NPM Package
 
-The npm package `@hferello/design-libraries-npm` transforms the DTCG token JSON into three CSS files per ratio system using Style Dictionary v4.
+The npm package `@hferello/number-system-npm` transforms the DTCG token JSON into three CSS files per ratio system using Style Dictionary v4.
 
 Install from GitHub Packages:
 
 ```
-npm install @hferello/design-libraries-npm --registry=https://npm.pkg.github.com
+npm install @hferello/number-system-npm --registry=https://npm.pkg.github.com
 ```
 
 ### Usage
@@ -25,13 +25,13 @@ npm install @hferello/design-libraries-npm --registry=https://npm.pkg.github.com
 For a Tailwind v4 project, import the tailwind-theme.css for your chosen ratio system:
 
 ```css
-@import "@hferello/design-libraries-npm/golden-ratio/tailwind-theme.css";
+@import "@hferello/number-system-npm/golden-ratio/tailwind-theme.css";
 ```
 
 For a non-Tailwind project, import tokens.css instead:
 
 ```css
-@import "@hferello/design-libraries-npm/golden-ratio/tokens.css";
+@import "@hferello/number-system-npm/golden-ratio/tokens.css";
 ```
 
 Replace `golden-ratio` with `typographic-ratio` or `base-10-ratio` as needed.
@@ -147,7 +147,7 @@ Each ratio folder contains 10 DTCG-format JSON files:
 
 ## Links
 
-- [NPM Package (GitHub)](https://github.com/hferello/design-libraries-npm): Source code and build pipeline
+- [NPM Package (GitHub)](https://github.com/hferello/number-system-npm): Source code and build pipeline
 - [Number System reference site](https://hferello.github.io/number-system/): Visual reference for all token values
 - [Golden Ratio Figma Library](https://lnkd.in/e9gqH7Np): Free on Figma Community
 - [Typographic Ratio Figma Library](https://lnkd.in/efJe88uR): Free on Figma Community
