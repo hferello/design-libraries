@@ -14,15 +14,15 @@
     "Sizes": {
       "XSmall": {
         "$type": "number",
-        "$value": 8,
+        "$value": 12,
         "$extensions": {
           "com.figma.variableId": "VariableID:6004:380",
           "com.figma.scopes": [
             "FONT_SIZE"
           ],
           "com.figma.aliasData": {
-            "targetVariableId": "VariableID:c66c13784bc588e7847788f70240701f1fa5acbd/-1:-1",
-            "targetVariableName": "Number/Positive/100",
+            "targetVariableId": "VariableID:eebcec222e2ea4449e4895181481fc2e026f2534/-1:-1",
+            "targetVariableName": "Number/Positive/200",
             "targetVariableSetId": "VariableCollectionId:81b8ff39b08d71fc907e43b02aba96ad4c38f1bf/-1:-1",
             "targetVariableSetName": "Primatives"
           },
