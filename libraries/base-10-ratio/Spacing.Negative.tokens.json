@@ -179,7 +179,7 @@
   },
   "Very far apart": {
     "$type": "number",
-    "$value": -144,
+    "$value": -120,
     "$description": "Very far apart",
     "$extensions": {
       "com.figma.variableId": "VariableID:6004:434",
@@ -188,7 +188,7 @@
       ],
       "com.figma.aliasData": {
         "targetVariableId": "VariableID:03606a0cb092c6041b877bb8b2893912fc6f6fca/-1:-1",
-        "targetVariableName": "Number/Negative/1200",
+        "targetVariableName": "Number/Negative/1300",
         "targetVariableSetId": "VariableCollectionId:1da749344149f656f06edff0db373b03caf4adc9/-1:-1",
         "targetVariableSetName": "Primatives"
       },
